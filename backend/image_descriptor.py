@@ -1,3 +1,3 @@
 class ImageDescriptor:
-  def describeImage(img):
-    return 0
+  def describeImage(self, img):
+    return []
