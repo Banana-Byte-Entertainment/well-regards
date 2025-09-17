@@ -1,0 +1,85 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: well-regards-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-wellregards}
+      POSTGRES_USER: ${DB_USER:-wellregards}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - well-regards-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-wellregards}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend Service
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: well-regards-backend
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-wellregards}
+      - DB_USER=${DB_USER:-wellregards}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - UPLOAD_FOLDER=/app/uploads
+    volumes:
+      - ./backend:/app
+      - uploaded_images:/app/uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - well-regards-network
+    restart: unless-stopped
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: well-regards-frontend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+      - REACT_APP_SUPABASE_URL=${SUPABASE_URL}
+      - REACT_APP_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - well-regards-network
+    restart: unless-stopped
+
+  # Redis for session management and caching
+  redis:
+    image: redis:7-alpine
+    container_name: well-regards-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - well-regards-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploaded_images:
+
+networks:
+  well-regards-network:
+    driver: bridge
