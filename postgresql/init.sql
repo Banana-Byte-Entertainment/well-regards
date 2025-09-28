@@ -29,6 +29,6 @@ CREATE TABLE IF NOT EXISTS image_jobs (
 );
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_messages_room_created AT ON messages(room_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_messages_room_created_at ON messages(room_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_messages_user_id ON messages(user_id);
 CREATE INDEX IF NOT EXISTS idx_image_jobs_status ON image_jobs(status);

@@ -1,12 +1,14 @@
 FROM python:3.11-slim
 
-# Install system dependencies for OpenCV and PostgreSQL
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
+# Update package lists and install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libgl1-mesa-dri \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
-    libxrender-dev \
+    libxrender1 \
     libgomp1 \
     libgthread-2.0-0 \
     libgtk-3-0 \
@@ -14,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     libhdf5-dev \
     gcc \
     g++ \
+    build-essential \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
