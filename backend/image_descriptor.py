@@ -1,6 +1,14 @@
+from backend.read_image import ObjectDetector
+
 class ImageDescriptor:
-  def describeImage(self, img):
-    return []
+
+  # takes in PATH to image, returns list of detected objects
+  def describeImage(self, img_path):
+    img_reader = ObjectDetector(confidence_threshold=0.7)
+    object_names = []
+    for detection in img_reader.detect_objects(img_path):
+      object_names.append(detection['class'])
+    return object_names
   
   # takes in array of string and returns a string
   # "This image contains: object1, ..., objectN."

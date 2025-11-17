@@ -10,6 +10,10 @@ def test_array_to_description():
   result = descriptor.array_to_description([])
   assert 'This image contains nothing' in result
   result = descriptor.array_to_description(['cat'])
-  assert 'This image contains: cat.'
+  assert 'This image contains: cat.' in result
   result = descriptor.array_to_description(['cat', 'dog'])
-  assert 'This image contains: cat, dog.'
+  assert 'This image contains: cat, dog.' in result
+  descriptor = ImageDescriptor()
+  image_description = descriptor.describeImage('./backend/tests/cat.jpg')
+  result = descriptor.array_to_description(image_description)
+  assert 'This image contains: cat.' in result
