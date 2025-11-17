@@ -1,7 +1,7 @@
 from backend.read_image import ObjectDetector
 
 class ImageDescriptor:
-  
+
   # takes in PATH to image, returns list of detected objects
   def describeImage(self, img_path):
     img_reader = ObjectDetector(confidence_threshold=0.7)
