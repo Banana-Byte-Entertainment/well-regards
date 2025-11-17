@@ -58,3 +58,6 @@ orjson==3.10.0
 
 # WebSocket support
 websockets==13.1
+
+# UltraAnalytics/YOLO
+ultralytics>=8.3.228
