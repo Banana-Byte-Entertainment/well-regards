@@ -1,13 +1,10 @@
 import sys
-from read_image import ImageReader
+from read_image import ObjectDetector
 
-detector = ImageReader()
-
-# Detect
-objects = detector.detect('elephant.png')
-for obj in objects:
-    print(f"{obj['label']}: {obj['confidence']:.2%}")
-print(f"Found {len(objects)} objects")
-
-# Save result
-detector.draw_detections('elephant.png', objects, 'output.png')
+detector = ObjectDetector(model_path='yolov8n.pt', confidence_threshold=0.5)
+image_path = 'elephant.png'
+detections = detector.detect_objects(image_path)
+    
+print(f"Found {len(detections)} objects:")
+for det in detections:
+    print(f"  - {det['class']} (confidence: {det['confidence']:.2f})")
