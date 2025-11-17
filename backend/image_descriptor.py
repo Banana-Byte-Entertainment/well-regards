@@ -1,10 +1,7 @@
 from backend.read_image import ObjectDetector
 
 class ImageDescriptor:
-<<<<<<< Updated upstream
-  def describeImage(self, img):
-    return []
-=======
+  
   # takes in PATH to image, returns list of detected objects
   def describeImage(self, img_path):
     img_reader = ObjectDetector(confidence_threshold=0.7)
@@ -25,4 +22,3 @@ class ImageDescriptor:
     result += "."
 
     return result
->>>>>>> Stashed changes
